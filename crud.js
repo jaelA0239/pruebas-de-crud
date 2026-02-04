@@ -26,8 +26,14 @@ class CRUDSystem {
             
             // Ocultar/mostrar elementos según permisos
             if (this.currentUser.role !== 'admin') {
-                document.querySelector('a[data-page="users"]').parentElement.style.display = 'none';
-                document.getElementById('addUserBtn').style.display = 'none';
+                const usersLink = document.querySelector('a[data-page="users"]');
+                if (usersLink && usersLink.parentElement) {
+                    usersLink.parentElement.style.display = 'none';
+                }
+                const addUserBtn = document.getElementById('addUserBtn');
+                if (addUserBtn) {
+                    addUserBtn.style.display = 'none';
+                }
             }
         }
     }
@@ -45,90 +51,150 @@ class CRUDSystem {
                     link.classList.add('active');
                     
                     // Actualizar título
-                    document.getElementById('pageTitle').textContent = link.querySelector('span').textContent;
+                    const titleElement = document.getElementById('pageTitle');
+                    if (titleElement) {
+                        const spanElement = link.querySelector('span');
+                        if (spanElement) {
+                            titleElement.textContent = spanElement.textContent;
+                        }
+                    }
                 });
             }
         });
         
-        // Logout
-        document.getElementById('logoutBtn').addEventListener('click', (e) => {
-            e.preventDefault();
-            this.logout();
-        });
+        // Logout - Botón del sidebar
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.logout();
+            });
+        }
         
-        document.getElementById('dropdownLogout').addEventListener('click', (e) => {
-            e.preventDefault();
-            this.logout();
-        });
+        // Logout - Botón del dropdown
+        const dropdownLogout = document.getElementById('dropdownLogout');
+        if (dropdownLogout) {
+            dropdownLogout.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.logout();
+            });
+        }
         
         // Menú de usuario
-        document.getElementById('userMenuBtn').addEventListener('click', () => {
-            document.getElementById('userDropdown').classList.toggle('show');
-        });
+        const userMenuBtn = document.getElementById('userMenuBtn');
+        if (userMenuBtn) {
+            userMenuBtn.addEventListener('click', () => {
+                const dropdown = document.getElementById('userDropdown');
+                if (dropdown) {
+                    dropdown.classList.toggle('show');
+                }
+            });
+        }
         
         // Cerrar menú al hacer clic fuera
         document.addEventListener('click', (e) => {
             if (!e.target.closest('.user-menu')) {
-                document.getElementById('userDropdown').classList.remove('show');
+                const dropdown = document.getElementById('userDropdown');
+                if (dropdown) {
+                    dropdown.classList.remove('show');
+                }
             }
         });
         
         // Toggle sidebar
-        document.getElementById('menuToggle').addEventListener('click', () => {
-            document.querySelector('.sidebar').classList.toggle('collapsed');
-        });
+        const menuToggle = document.getElementById('menuToggle');
+        if (menuToggle) {
+            menuToggle.addEventListener('click', () => {
+                const sidebar = document.querySelector('.sidebar');
+                if (sidebar) {
+                    sidebar.classList.toggle('collapsed');
+                }
+            });
+        }
         
         // Productos
-        document.getElementById('addProductBtn')?.addEventListener('click', () => {
-            this.showProductModal();
-        });
+        const addProductBtn = document.getElementById('addProductBtn');
+        if (addProductBtn) {
+            addProductBtn.addEventListener('click', () => {
+                this.showProductModal();
+            });
+        }
         
-        document.getElementById('cancelProductBtn')?.addEventListener('click', () => {
-            this.hideProductModal();
-        });
+        const cancelProductBtn = document.getElementById('cancelProductBtn');
+        if (cancelProductBtn) {
+            cancelProductBtn.addEventListener('click', () => {
+                this.hideProductModal();
+            });
+        }
         
-        document.getElementById('productForm')?.addEventListener('submit', (e) => {
-            e.preventDefault();
-            this.saveProduct();
-        });
+        const productForm = document.getElementById('productForm');
+        if (productForm) {
+            productForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                this.saveProduct();
+            });
+        }
         
         // Cambiar contraseña
-        document.getElementById('changePasswordForm')?.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            await this.changePassword();
-        });
+        const changePasswordForm = document.getElementById('changePasswordForm');
+        if (changePasswordForm) {
+            changePasswordForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                await this.changePassword();
+            });
+        }
         
         // Filtros de productos
-        document.getElementById('productSearch')?.addEventListener('input', (e) => {
-            this.filterProducts(e.target.value);
-        });
+        const productSearch = document.getElementById('productSearch');
+        if (productSearch) {
+            productSearch.addEventListener('input', (e) => {
+                this.filterProducts(e.target.value);
+            });
+        }
         
-        document.getElementById('categoryFilter')?.addEventListener('change', (e) => {
-            this.filterProducts();
-        });
+        const categoryFilter = document.getElementById('categoryFilter');
+        if (categoryFilter) {
+            categoryFilter.addEventListener('change', (e) => {
+                this.filterProducts();
+            });
+        }
         
-        document.getElementById('resetFilters')?.addEventListener('click', () => {
-            document.getElementById('productSearch').value = '';
-            document.getElementById('categoryFilter').value = '';
-            this.loadProducts();
-        });
+        const resetFilters = document.getElementById('resetFilters');
+        if (resetFilters) {
+            resetFilters.addEventListener('click', () => {
+                const searchInput = document.getElementById('productSearch');
+                const categorySelect = document.getElementById('categoryFilter');
+                if (searchInput) searchInput.value = '';
+                if (categorySelect) categorySelect.value = '';
+                this.loadProducts();
+            });
+        }
         
         // Configuración
-        document.getElementById('exportDataBtn')?.addEventListener('click', () => {
-            this.exportData();
-        });
+        const exportDataBtn = document.getElementById('exportDataBtn');
+        if (exportDataBtn) {
+            exportDataBtn.addEventListener('click', () => {
+                this.exportData();
+            });
+        }
         
-        document.getElementById('resetDatabaseBtn')?.addEventListener('click', () => {
-            this.showConfirmModal(
-                '¿Estás seguro de que deseas reiniciar toda la base de datos? Esta acción eliminará todos los datos excepto las cuentas de administrador.',
-                () => this.resetDatabase()
-            );
-        });
+        const resetDatabaseBtn = document.getElementById('resetDatabaseBtn');
+        if (resetDatabaseBtn) {
+            resetDatabaseBtn.addEventListener('click', () => {
+                this.showConfirmModal(
+                    '¿Estás seguro de que deseas reiniciar toda la base de datos? Esta acción eliminará todos los datos excepto las cuentas de administrador.',
+                    () => this.resetDatabase()
+                );
+            });
+        }
         
         // Notificaciones
-        document.getElementById('notificationsBtn')?.addEventListener('click', () => {
-            this.showToast('No hay notificaciones nuevas', 'info');
-        });
+        const notificationsBtn = document.getElementById('notificationsBtn');
+        if (notificationsBtn) {
+            notificationsBtn.addEventListener('click', () => {
+                this.showToast('No hay notificaciones nuevas', 'info');
+            });
+        }
         
         // Mostrar/ocultar contraseña
         document.querySelectorAll('.toggle-password').forEach(btn => {
@@ -136,12 +202,14 @@ class CRUDSystem {
                 const input = this.parentElement.querySelector('input');
                 const icon = this.querySelector('i');
                 
-                if (input.type === 'password') {
-                    input.type = 'text';
-                    icon.className = 'fas fa-eye-slash';
-                } else {
-                    input.type = 'password';
-                    icon.className = 'fas fa-eye';
+                if (input && icon) {
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        icon.className = 'fas fa-eye-slash';
+                    } else {
+                        input.type = 'password';
+                        icon.className = 'fas fa-eye';
+                    }
                 }
             });
         });
@@ -154,7 +222,10 @@ class CRUDSystem {
         });
         
         // Mostrar página seleccionada
-        document.getElementById(pageName + 'Page').classList.add('active');
+        const targetPage = document.getElementById(pageName + 'Page');
+        if (targetPage) {
+            targetPage.classList.add('active');
+        }
         
         // Cargar datos específicos de la página
         switch(pageName) {
@@ -182,13 +253,18 @@ class CRUDSystem {
         const products = database.getProducts();
         const sessions = database.sessions;
         
-        document.getElementById('statTotalUsers').textContent = users.length;
-        document.getElementById('statTotalProducts').textContent = products.length;
-        document.getElementById('statActiveSessions').textContent = sessions.length;
+        const statTotalUsers = document.getElementById('statTotalUsers');
+        const statTotalProducts = document.getElementById('statTotalProducts');
+        const statActiveSessions = document.getElementById('statActiveSessions');
+        const statTotalValue = document.getElementById('statTotalValue');
+        
+        if (statTotalUsers) statTotalUsers.textContent = users.length;
+        if (statTotalProducts) statTotalProducts.textContent = products.length;
+        if (statActiveSessions) statActiveSessions.textContent = sessions.length;
         
         // Calcular valor total
         const totalValue = products.reduce((sum, product) => sum + (product.price * product.stock), 0);
-        document.getElementById('statTotalValue').textContent = '$' + totalValue.toLocaleString();
+        if (statTotalValue) statTotalValue.textContent = '$' + totalValue.toLocaleString();
         
         // Productos recientes
         const recentProducts = products.slice(-5).reverse();
@@ -202,13 +278,16 @@ class CRUDSystem {
             </tr>
         `).join('');
         
-        document.getElementById('recentProducts').innerHTML = recentProductsHtml;
+        const recentProductsElement = document.getElementById('recentProducts');
+        if (recentProductsElement) {
+            recentProductsElement.innerHTML = recentProductsHtml;
+        }
         
         // Actividad reciente
         const activities = [
             { action: 'Nuevo producto agregado', user: 'admin', time: 'Hace 2 horas' },
             { action: 'Usuario registrado', user: 'sistema', time: 'Hace 5 horas' },
-            { action: 'Sesión iniciada', user: currentUser.name, time: 'Reciente' },
+            { action: 'Sesión iniciada', user: this.currentUser.name, time: 'Reciente' },
             { action: 'Producto actualizado', user: 'admin', time: 'Ayer' }
         ];
         
@@ -224,7 +303,10 @@ class CRUDSystem {
             </div>
         `).join('');
         
-        document.getElementById('activityList').innerHTML = activityHtml;
+        const activityListElement = document.getElementById('activityList');
+        if (activityListElement) {
+            activityListElement.innerHTML = activityHtml;
+        }
     }
     
     loadProducts() {
@@ -271,8 +353,11 @@ class CRUDSystem {
             `;
         }).join('');
         
-        document.getElementById('productsTable').innerHTML = productsHtml || 
-            '<tr><td colspan="7" class="empty">No hay productos para mostrar</td></tr>';
+        const productsTableElement = document.getElementById('productsTable');
+        if (productsTableElement) {
+            productsTableElement.innerHTML = productsHtml || 
+                '<tr><td colspan="7" class="empty">No hay productos para mostrar</td></tr>';
+        }
     }
     
     filterProducts(searchTerm = '') {
@@ -302,12 +387,16 @@ class CRUDSystem {
             document.getElementById('productId').value = '';
         }
         
-        modal.style.display = 'flex';
+        if (modal) {
+            modal.style.display = 'flex';
+        }
     }
     
     hideProductModal() {
-        document.getElementById('productModal').style.display = 'none';
-        document.getElementById('productForm').reset();
+        const modal = document.getElementById('productModal');
+        const form = document.getElementById('productForm');
+        if (modal) modal.style.display = 'none';
+        if (form) form.reset();
     }
     
     saveProduct() {
@@ -388,14 +477,20 @@ class CRUDSystem {
             </tr>
         `).join('');
         
-        document.getElementById('usersTable').innerHTML = usersHtml;
+        const usersTableElement = document.getElementById('usersTable');
+        if (usersTableElement) {
+            usersTableElement.innerHTML = usersHtml;
+        }
     }
     
     loadProfile() {
         // Actualizar última conexión
         const now = new Date();
-        document.getElementById('profileLastAccess').textContent = 
-            now.toLocaleDateString('es-ES') + ' ' + now.toLocaleTimeString('es-ES');
+        const profileLastAccess = document.getElementById('profileLastAccess');
+        if (profileLastAccess) {
+            profileLastAccess.textContent = 
+                now.toLocaleDateString('es-ES') + ' ' + now.toLocaleTimeString('es-ES');
+        }
     }
     
     async changePassword() {
@@ -417,16 +512,21 @@ class CRUDSystem {
         
         if (result.success) {
             this.showToast('Contraseña cambiada correctamente', 'success');
-            document.getElementById('changePasswordForm').reset();
+            const form = document.getElementById('changePasswordForm');
+            if (form) form.reset();
         } else {
             this.showToast(result.message, 'error');
         }
     }
     
     loadSettings() {
-        document.getElementById('dbUsersCount').textContent = database.getUsers().length;
-        document.getElementById('dbProductsCount').textContent = database.getProducts().length;
-        document.getElementById('dbSessionsCount').textContent = database.sessions.length;
+        const dbUsersCount = document.getElementById('dbUsersCount');
+        const dbProductsCount = document.getElementById('dbProductsCount');
+        const dbSessionsCount = document.getElementById('dbSessionsCount');
+        
+        if (dbUsersCount) dbUsersCount.textContent = database.getUsers().length;
+        if (dbProductsCount) dbProductsCount.textContent = database.getProducts().length;
+        if (dbSessionsCount) dbSessionsCount.textContent = database.sessions.length;
     }
     
     exportData() {
@@ -457,32 +557,41 @@ class CRUDSystem {
     }
     
     showConfirmModal(message, confirmCallback) {
-        document.getElementById('confirmMessage').textContent = message;
+        const confirmMessageElement = document.getElementById('confirmMessage');
+        if (confirmMessageElement) {
+            confirmMessageElement.textContent = message;
+        }
+        
         const modal = document.getElementById('confirmModal');
-        modal.style.display = 'flex';
+        if (modal) {
+            modal.style.display = 'flex';
+        }
         
         const confirmBtn = document.getElementById('confirmActionBtn');
         const cancelBtn = document.getElementById('cancelActionBtn');
         
         const handleConfirm = () => {
             confirmCallback();
-            modal.style.display = 'none';
-            confirmBtn.removeEventListener('click', handleConfirm);
-            cancelBtn.removeEventListener('click', handleCancel);
+            if (modal) modal.style.display = 'none';
+            if (confirmBtn) confirmBtn.removeEventListener('click', handleConfirm);
+            if (cancelBtn) cancelBtn.removeEventListener('click', handleCancel);
         };
         
         const handleCancel = () => {
-            modal.style.display = 'none';
-            confirmBtn.removeEventListener('click', handleConfirm);
-            cancelBtn.removeEventListener('click', handleCancel);
+            if (modal) modal.style.display = 'none';
+            if (confirmBtn) confirmBtn.removeEventListener('click', handleConfirm);
+            if (cancelBtn) cancelBtn.removeEventListener('click', handleCancel);
         };
         
-        confirmBtn.addEventListener('click', handleConfirm);
-        cancelBtn.addEventListener('click', handleCancel);
+        if (confirmBtn) confirmBtn.addEventListener('click', handleConfirm);
+        if (cancelBtn) cancelBtn.addEventListener('click', handleCancel);
     }
     
     hideConfirmModal() {
-        document.getElementById('confirmModal').style.display = 'none';
+        const modal = document.getElementById('confirmModal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
     }
     
     updateUserInfo() {
@@ -496,21 +605,39 @@ class CRUDSystem {
     }
     
     logout() {
-        auth.logout();
-        window.location.href = 'index.html';
+        console.log('Intentando cerrar sesión...');
+        
+        // Llamar al logout del sistema de autenticación
+        const success = auth.logout();
+        
+        if (success) {
+            console.log('Sesión cerrada exitosamente');
+            this.showToast('Sesión cerrada correctamente', 'success');
+            
+            // Esperar un momento para que se vea el mensaje
+            setTimeout(() => {
+                // Usar replace para evitar que el usuario vuelva atrás
+                window.location.replace('index.html');
+            }, 500);
+        } else {
+            console.error('Error al cerrar sesión');
+            this.showToast('Error al cerrar sesión', 'error');
+        }
     }
     
     showToast(message, type = 'info') {
         const toast = document.getElementById('toast');
-        toast.textContent = message;
-        toast.className = 'toast ' + type;
-        
-        setTimeout(() => {
-            toast.classList.add('show');
-        }, 10);
-        
-        setTimeout(() => {
-            toast.classList.remove('show');
-        }, 3000);
+        if (toast) {
+            toast.textContent = message;
+            toast.className = 'toast ' + type;
+            
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10);
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
     }
 }
