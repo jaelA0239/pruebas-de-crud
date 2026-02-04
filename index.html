@@ -32,7 +32,7 @@
                     <label for="loginUsername">
                         <i class="fas fa-user"></i> Nombre de Usuario
                     </label>
-                    <input type="text" id="loginUsername" placeholder="Ingresa tu usuario" required>
+                    <input type="text" id="loginUsername" placeholder="Ingresa tu usuario" required autocomplete="username">
                 </div>
                 
                 <div class="form-group">
@@ -40,7 +40,7 @@
                         <i class="fas fa-lock"></i> Contraseña
                     </label>
                     <div class="password-container">
-                        <input type="password" id="loginPassword" placeholder="Ingresa tu contraseña" required>
+                        <input type="password" id="loginPassword" placeholder="Ingresa tu contraseña" required autocomplete="current-password">
                         <button type="button" class="toggle-password" data-target="loginPassword">
                             <i class="fas fa-eye"></i>
                         </button>
@@ -81,21 +81,21 @@
                     <label for="registerName">
                         <i class="fas fa-id-card"></i> Nombre Completo
                     </label>
-                    <input type="text" id="registerName" placeholder="Ej: Juan Pérez" required>
+                    <input type="text" id="registerName" placeholder="Ej: Juan Pérez" required autocomplete="name">
                 </div>
                 
                 <div class="form-group">
                     <label for="registerUsername">
                         <i class="fas fa-user"></i> Nombre de Usuario
                     </label>
-                    <input type="text" id="registerUsername" placeholder="Elige un nombre de usuario" required>
+                    <input type="text" id="registerUsername" placeholder="Elige un nombre de usuario" required autocomplete="username">
                 </div>
                 
                 <div class="form-group">
                     <label for="registerEmail">
                         <i class="fas fa-envelope"></i> Email
                     </label>
-                    <input type="email" id="registerEmail" placeholder="tu@email.com" required>
+                    <input type="email" id="registerEmail" placeholder="tu@email.com" required autocomplete="email">
                 </div>
                 
                 <div class="form-group">
@@ -103,7 +103,7 @@
                         <i class="fas fa-lock"></i> Contraseña
                     </label>
                     <div class="password-container">
-                        <input type="password" id="registerPassword" placeholder="Mínimo 6 caracteres" required>
+                        <input type="password" id="registerPassword" placeholder="Mínimo 6 caracteres" required autocomplete="new-password">
                         <button type="button" class="toggle-password" data-target="registerPassword">
                             <i class="fas fa-eye"></i>
                         </button>
@@ -119,7 +119,7 @@
                         <i class="fas fa-lock"></i> Confirmar Contraseña
                     </label>
                     <div class="password-container">
-                        <input type="password" id="registerConfirmPassword" placeholder="Repite tu contraseña" required>
+                        <input type="password" id="registerConfirmPassword" placeholder="Repite tu contraseña" required autocomplete="new-password">
                         <button type="button" class="toggle-password" data-target="registerConfirmPassword">
                             <i class="fas fa-eye"></i>
                         </button>
@@ -192,16 +192,36 @@
     <script src="database.js"></script>
     <script src="auth.js"></script>
     <script>
+        // Función para mostrar toast
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast ' + type;
+            
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10);
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
         // Verificar si ya está autenticado
         if (auth.isAuthenticated()) {
+            console.log('Usuario ya autenticado, redirigiendo...');
             window.location.href = 'dashboard.html';
         }
 
         // Actualizar estadísticas
         function updateStats() {
-            document.getElementById('totalUsers').textContent = database.getUsers().length;
-            document.getElementById('totalProducts').textContent = database.getProducts().length;
-            document.getElementById('activeSessions').textContent = database.sessions.length;
+            try {
+                document.getElementById('totalUsers').textContent = database.getUsers().length;
+                document.getElementById('totalProducts').textContent = database.getProducts().length;
+                document.getElementById('activeSessions').textContent = database.sessions.length;
+            } catch (error) {
+                console.error('Error al actualizar estadísticas:', error);
+            }
         }
         
         updateStats();
@@ -223,6 +243,7 @@
                 
                 // Limpiar mensajes
                 document.getElementById('authMessage').textContent = '';
+                document.getElementById('authMessage').className = 'message';
             });
         });
 
@@ -271,28 +292,41 @@
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            const username = document.getElementById('loginUsername').value;
+            const username = document.getElementById('loginUsername').value.trim();
             const password = document.getElementById('loginPassword').value;
             const messageDiv = document.getElementById('authMessage');
+            
+            console.log('Intentando login con:', username);
             
             messageDiv.textContent = 'Iniciando sesión...';
             messageDiv.className = 'message info';
             
-            const result = await auth.login(username, password);
-            
-            if (result.success) {
-                messageDiv.textContent = '¡Login exitoso! Redirigiendo...';
-                messageDiv.className = 'message success';
+            try {
+                const result = await auth.login(username, password);
                 
-                showToast('¡Bienvenido, ' + result.user.name + '!', 'success');
+                console.log('Resultado del login:', result);
                 
-                // Redirigir después de 1 segundo
-                setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 1000);
-            } else {
-                messageDiv.textContent = result.message;
+                if (result.success) {
+                    messageDiv.textContent = '¡Login exitoso! Redirigiendo...';
+                    messageDiv.className = 'message success';
+                    
+                    showToast('¡Bienvenido, ' + result.user.name + '!', 'success');
+                    
+                    // Redirigir después de medio segundo
+                    setTimeout(() => {
+                        console.log('Redirigiendo a dashboard...');
+                        window.location.href = 'dashboard.html';
+                    }, 500);
+                } else {
+                    messageDiv.textContent = result.message;
+                    messageDiv.className = 'message error';
+                    showToast(result.message, 'error');
+                }
+            } catch (error) {
+                console.error('Error en login:', error);
+                messageDiv.textContent = 'Error al iniciar sesión';
                 messageDiv.className = 'message error';
+                showToast('Error al iniciar sesión', 'error');
             }
         });
 
@@ -301,9 +335,9 @@
             e.preventDefault();
             
             const userData = {
-                name: document.getElementById('registerName').value,
-                username: document.getElementById('registerUsername').value,
-                email: document.getElementById('registerEmail').value,
+                name: document.getElementById('registerName').value.trim(),
+                username: document.getElementById('registerUsername').value.trim(),
+                email: document.getElementById('registerEmail').value.trim(),
                 password: document.getElementById('registerPassword').value,
                 confirmPassword: document.getElementById('registerConfirmPassword').value
             };
@@ -312,21 +346,32 @@
             messageDiv.textContent = 'Creando cuenta...';
             messageDiv.className = 'message info';
             
-            const result = await auth.register(userData);
-            
-            if (result.success) {
-                messageDiv.textContent = '¡Cuenta creada exitosamente!';
-                messageDiv.className = 'message success';
+            try {
+                const result = await auth.register(userData);
                 
-                showToast('Cuenta creada para ' + result.user.name, 'success');
+                console.log('Resultado del registro:', result);
                 
-                // Redirigir después de 1 segundo
-                setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 1000);
-            } else {
-                messageDiv.textContent = result.message;
+                if (result.success) {
+                    messageDiv.textContent = '¡Cuenta creada exitosamente!';
+                    messageDiv.className = 'message success';
+                    
+                    showToast('Cuenta creada para ' + result.user.name, 'success');
+                    
+                    // Redirigir después de medio segundo
+                    setTimeout(() => {
+                        console.log('Redirigiendo a dashboard...');
+                        window.location.href = 'dashboard.html';
+                    }, 500);
+                } else {
+                    messageDiv.textContent = result.message;
+                    messageDiv.className = 'message error';
+                    showToast(result.message, 'error');
+                }
+            } catch (error) {
+                console.error('Error en registro:', error);
+                messageDiv.textContent = 'Error al crear la cuenta';
                 messageDiv.className = 'message error';
+                showToast('Error al crear la cuenta', 'error');
             }
         });
 
@@ -335,21 +380,6 @@
             e.preventDefault();
             showToast('Contacta al administrador para restablecer tu contraseña', 'info');
         });
-
-        // Función para mostrar toast
-        function showToast(message, type = 'info') {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.className = 'toast ' + type;
-            
-            setTimeout(() => {
-                toast.classList.add('show');
-            }, 10);
-            
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
-        }
 
         // Reset de base de datos para desarrollo
         if (window.location.search.includes('reset')) {
