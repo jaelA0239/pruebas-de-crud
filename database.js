@@ -50,7 +50,7 @@ class Database {
     // Usuario CRUD
     createUser(userData) {
         const newUser = {
-            id: this.users.length + 1,
+            id: this.users.length > 0 ? Math.max(...this.users.map(u => u.id)) + 1 : 1,
             ...userData,
             password: this.hashPassword(userData.password),
             role: 'user',
@@ -65,6 +65,10 @@ class Database {
         return this.users.find(user => user.username === username);
     }
     
+    getUserByEmail(email) {
+        return this.users.find(user => user.email === email);
+    }
+    
     getUserById(id) {
         return this.users.find(user => user.id === id);
     }
@@ -76,10 +80,20 @@ class Database {
         });
     }
     
+    updateUserPassword(userId, newPassword) {
+        const userIndex = this.users.findIndex(u => u.id === userId);
+        if (userIndex !== -1) {
+            this.users[userIndex].password = this.hashPassword(newPassword);
+            this.saveToLocalStorage();
+            return true;
+        }
+        return false;
+    }
+    
     // Product CRUD
     createProduct(productData, userId) {
         const newProduct = {
-            id: this.products.length + 1,
+            id: this.products.length > 0 ? Math.max(...this.products.map(p => p.id)) + 1 : 1,
             ...productData,
             createdBy: userId,
             createdAt: new Date().toISOString()
@@ -126,6 +140,7 @@ class Database {
             expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // 24 horas
         };
         this.sessions.push(session);
+        this.saveToLocalStorage();
         return session;
     }
     
@@ -136,6 +151,7 @@ class Database {
         // Verificar si la sesión expiró
         if (new Date(session.expiresAt) < new Date()) {
             this.sessions = this.sessions.filter(s => s.token !== token);
+            this.saveToLocalStorage();
             return null;
         }
         
@@ -144,25 +160,40 @@ class Database {
     
     deleteSession(token) {
         this.sessions = this.sessions.filter(s => s.token !== token);
+        this.saveToLocalStorage();
     }
     
     // Persistencia
     saveToLocalStorage() {
-        const data = {
-            users: this.users,
-            products: this.products,
-            sessions: this.sessions
-        };
-        localStorage.setItem('crud_app_database', JSON.stringify(data));
+        try {
+            const data = {
+                users: this.users,
+                products: this.products,
+                sessions: this.sessions
+            };
+            localStorage.setItem('crud_app_database', JSON.stringify(data));
+        } catch (error) {
+            console.error('Error al guardar en localStorage:', error);
+        }
     }
     
     loadFromLocalStorage() {
-        const savedData = localStorage.getItem('crud_app_database');
-        if (savedData) {
-            const data = JSON.parse(savedData);
-            this.users = data.users || this.users;
-            this.products = data.products || this.products;
-            this.sessions = data.sessions || this.sessions;
+        try {
+            const savedData = localStorage.getItem('crud_app_database');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                if (data.users && Array.isArray(data.users) && data.users.length > 0) {
+                    this.users = data.users;
+                }
+                if (data.products && Array.isArray(data.products)) {
+                    this.products = data.products;
+                }
+                if (data.sessions && Array.isArray(data.sessions)) {
+                    this.sessions = data.sessions;
+                }
+            }
+        } catch (error) {
+            console.error('Error al cargar desde localStorage:', error);
         }
     }
     
