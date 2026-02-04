@@ -94,6 +94,12 @@ class AuthSystem {
                 throw new Error('El nombre de usuario ya está en uso');
             }
             
+            // Verificar si el email ya existe
+            const existingEmail = database.getUserByEmail(email);
+            if (existingEmail) {
+                throw new Error('El email ya está registrado');
+            }
+            
             // Crear nuevo usuario
             const newUser = database.createUser({
                 username,
@@ -214,14 +220,11 @@ class AuthSystem {
             }
             
             // Actualizar contraseña en la base de datos
-            const userIndex = database.users.findIndex(u => u.id === this.currentUser.id);
-            if (userIndex !== -1) {
-                database.users[userIndex].password = database.hashPassword(newPassword);
-                database.saveToLocalStorage();
-                
+            const success = database.updateUserPassword(this.currentUser.id, newPassword);
+            
+            if (success) {
                 // Actualizar usuario actual
-                this.currentUser = database.users[userIndex];
-                
+                this.currentUser = database.getUserById(this.currentUser.id);
                 return { success: true };
             }
             
