@@ -1,0 +1,3 @@
+Admin: admin / admin123
+
+Usuario: usuario / user123

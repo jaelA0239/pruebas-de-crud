@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema CRUD - Login</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="auth-container">
+        <!-- Panel de Login/Registro -->
+        <div class="auth-box" id="authBox">
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="login">
+                    <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+                </button>
+                <button class="tab-btn" data-tab="register">
+                    <i class="fas fa-user-plus"></i> Registrarse
+                </button>
+            </div>
+            
+            <!-- Formulario de Login -->
+            <form id="loginForm" class="auth-form active">
+                <div class="form-header">
+                    <h2>Bienvenido de Nuevo</h2>
+                    <p>Ingresa tus credenciales para acceder</p>
+                </div>
+                
+                <div class="form-group">
+                    <label for="loginUsername">
+                        <i class="fas fa-user"></i> Nombre de Usuario
+                    </label>
+                    <input type="text" id="loginUsername" placeholder="Ingresa tu usuario" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="loginPassword">
+                        <i class="fas fa-lock"></i> Contraseña
+                    </label>
+                    <div class="password-container">
+                        <input type="password" id="loginPassword" placeholder="Ingresa tu contraseña" required>
+                        <button type="button" class="toggle-password" data-target="loginPassword">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="form-options">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="rememberMe">
+                        <span>Recordar sesión</span>
+                    </label>
+                    <a href="#" id="forgotPassword">¿Olvidaste tu contraseña?</a>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-block">
+                    <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+                </button>
+                
+                <div class="demo-credentials">
+                    <h4>Credenciales de Demo:</h4>
+                    <div class="credential">
+                        <strong>Admin:</strong> admin / admin123
+                    </div>
+                    <div class="credential">
+                        <strong>Usuario:</strong> usuario / user123
+                    </div>
+                </div>
+            </form>
+            
+            <!-- Formulario de Registro -->
+            <form id="registerForm" class="auth-form">
+                <div class="form-header">
+                    <h2>Crear Nueva Cuenta</h2>
+                    <p>Únete a nuestro sistema</p>
+                </div>
+                
+                <div class="form-group">
+                    <label for="registerName">
+                        <i class="fas fa-id-card"></i> Nombre Completo
+                    </label>
+                    <input type="text" id="registerName" placeholder="Ej: Juan Pérez" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="registerUsername">
+                        <i class="fas fa-user"></i> Nombre de Usuario
+                    </label>
+                    <input type="text" id="registerUsername" placeholder="Elige un nombre de usuario" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="registerEmail">
+                        <i class="fas fa-envelope"></i> Email
+                    </label>
+                    <input type="email" id="registerEmail" placeholder="tu@email.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="registerPassword">
+                        <i class="fas fa-lock"></i> Contraseña
+                    </label>
+                    <div class="password-container">
+                        <input type="password" id="registerPassword" placeholder="Mínimo 6 caracteres" required>
+                        <button type="button" class="toggle-password" data-target="registerPassword">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="password-strength">
+                        <div class="strength-bar"></div>
+                        <span class="strength-text">Seguridad: Baja</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="registerConfirmPassword">
+                        <i class="fas fa-lock"></i> Confirmar Contraseña
+                    </label>
+                    <div class="password-container">
+                        <input type="password" id="registerConfirmPassword" placeholder="Repite tu contraseña" required>
+                        <button type="button" class="toggle-password" data-target="registerConfirmPassword">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="termsAgreement" required>
+                        <span>Acepto los <a href="#">términos y condiciones</a></span>
+                    </label>
+                </div>
+                
+                <button type="submit" class="btn btn-success btn-block">
+                    <i class="fas fa-user-plus"></i> Crear Cuenta
+                </button>
+            </form>
+            
+            <!-- Mensajes de estado -->
+            <div id="authMessage" class="message"></div>
+        </div>
+        
+        <!-- Información del Sistema -->
+        <div class="system-info">
+            <div class="info-content">
+                <h1><i class="fas fa-database"></i> Sistema CRUD</h1>
+                <p class="subtitle">Gestión Completa con Autenticación</p>
+                
+                <div class="features">
+                    <div class="feature">
+                        <i class="fas fa-shield-alt"></i>
+                        <h3>Autenticación Segura</h3>
+                        <p>Login con validación y sesiones protegidas</p>
+                    </div>
+                    
+                    <div class="feature">
+                        <i class="fas fa-users-cog"></i>
+                        <h3>Múltiples Roles</h3>
+                        <p>Administradores y usuarios con permisos diferentes</p>
+                    </div>
+                    
+                    <div class="feature">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>Dashboard Completo</h3>
+                        <p>Interfaz intuitiva para gestión de datos</p>
+                    </div>
+                </div>
+                
+                <div class="stats">
+                    <div class="stat">
+                        <span class="stat-number" id="totalUsers">0</span>
+                        <span class="stat-label">Usuarios</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number" id="totalProducts">0</span>
+                        <span class="stat-label">Productos</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number" id="activeSessions">0</span>
+                        <span class="stat-label">Sesiones Activas</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <script src="database.js"></script>
+    <script src="auth.js"></script>
+    <script>
+        // Verificar si ya está autenticado
+        if (auth.isAuthenticated()) {
+            window.location.href = 'dashboard.html';
+        }
+
+        // Actualizar estadísticas
+        function updateStats() {
+            document.getElementById('totalUsers').textContent = database.getUsers().length;
+            document.getElementById('totalProducts').textContent = database.getProducts().length;
+            document.getElementById('activeSessions').textContent = database.sessions.length;
+        }
+        
+        updateStats();
+
+        // Manejo de tabs
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tab = btn.dataset.tab;
+                
+                // Actualizar tabs activos
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                // Mostrar formulario correspondiente
+                document.querySelectorAll('.auth-form').forEach(form => {
+                    form.classList.remove('active');
+                });
+                document.getElementById(tab + 'Form').classList.add('active');
+                
+                // Limpiar mensajes
+                document.getElementById('authMessage').textContent = '';
+            });
+        });
+
+        // Mostrar/ocultar contraseña
+        document.querySelectorAll('.toggle-password').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const targetId = this.dataset.target;
+                const input = document.getElementById(targetId);
+                const icon = this.querySelector('i');
+                
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.className = 'fas fa-eye-slash';
+                } else {
+                    input.type = 'password';
+                    icon.className = 'fas fa-eye';
+                }
+            });
+        });
+
+        // Validar fortaleza de contraseña
+        const registerPassword = document.getElementById('registerPassword');
+        if (registerPassword) {
+            registerPassword.addEventListener('input', function() {
+                const password = this.value;
+                const strengthBar = document.querySelector('.strength-bar');
+                const strengthText = document.querySelector('.strength-text');
+                
+                let strength = 0;
+                if (password.length >= 6) strength++;
+                if (password.length >= 8) strength++;
+                if (/[A-Z]/.test(password)) strength++;
+                if (/[0-9]/.test(password)) strength++;
+                if (/[^A-Za-z0-9]/.test(password)) strength++;
+                
+                const colors = ['#e74c3c', '#f39c12', '#3498db', '#2ecc71', '#27ae60'];
+                const texts = ['Muy Débil', 'Débil', 'Media', 'Fuerte', 'Muy Fuerte'];
+                
+                strengthBar.style.width = (strength * 20) + '%';
+                strengthBar.style.backgroundColor = colors[strength];
+                strengthText.textContent = 'Seguridad: ' + texts[strength];
+            });
+        }
+
+        // Manejo del formulario de login
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            const messageDiv = document.getElementById('authMessage');
+            
+            messageDiv.textContent = 'Iniciando sesión...';
+            messageDiv.className = 'message info';
+            
+            const result = await auth.login(username, password);
+            
+            if (result.success) {
+                messageDiv.textContent = '¡Login exitoso! Redirigiendo...';
+                messageDiv.className = 'message success';
+                
+                showToast('¡Bienvenido, ' + result.user.name + '!', 'success');
+                
+                // Redirigir después de 1 segundo
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1000);
+            } else {
+                messageDiv.textContent = result.message;
+                messageDiv.className = 'message error';
+            }
+        });
+
+        // Manejo del formulario de registro
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const userData = {
+                name: document.getElementById('registerName').value,
+                username: document.getElementById('registerUsername').value,
+                email: document.getElementById('registerEmail').value,
+                password: document.getElementById('registerPassword').value,
+                confirmPassword: document.getElementById('registerConfirmPassword').value
+            };
+            
+            const messageDiv = document.getElementById('authMessage');
+            messageDiv.textContent = 'Creando cuenta...';
+            messageDiv.className = 'message info';
+            
+            const result = await auth.register(userData);
+            
+            if (result.success) {
+                messageDiv.textContent = '¡Cuenta creada exitosamente!';
+                messageDiv.className = 'message success';
+                
+                showToast('Cuenta creada para ' + result.user.name, 'success');
+                
+                // Redirigir después de 1 segundo
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1000);
+            } else {
+                messageDiv.textContent = result.message;
+                messageDiv.className = 'message error';
+            }
+        });
+
+        // Olvidé mi contraseña
+        document.getElementById('forgotPassword').addEventListener('click', function(e) {
+            e.preventDefault();
+            showToast('Contacta al administrador para restablecer tu contraseña', 'info');
+        });
+
+        // Función para mostrar toast
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast ' + type;
+            
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10);
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Reset de base de datos para desarrollo
+        if (window.location.search.includes('reset')) {
+            database.resetDatabase();
+            showToast('Base de datos reiniciada', 'warning');
+            updateStats();
+        }
+    </script>
+</body>
+</html>
